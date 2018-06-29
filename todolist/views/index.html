@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+<head>
+<title></title>
+<meta http-equiv="x-ua-compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../css/index.css">
+<script src="../js/jquery/2.0.0/jquery.min.js"></script> 
+<link href="../css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet">
+<script src="../js/bootstrap/3.3.6/bootstrap.min.js"></script>   
+<style type="text/css">
+	#header {
+		width:1000px;
+		background-color:#CCE0E0;
+	}
+	#body {
+		width:1000px;
+		height:500px;
+	}
+	#body ul {
+		list-style-type: none;
+	}
+	#menu {
+		float:left;
+		width:300px;
+	}
+	#body-right {
+		float:right;
+		width:700px;
+	}
+	#body-right {
+		width:700px;
+		height:500px;
+		float:left;
+	}
+	.list-group button { 
+        background: none;
+        border: 0;
+        color: red;
+        outline: 0;
+        float: right;
+        font-weight: bold;
+        margin-left: 5px;
+    }
+    .del{
+        text-decoration: line-through;
+        color: #cccccc;
+    }
+</style>
+</head>
+
+<body>
+	<div id="container">
+		<div id="body">		
+			<div id="menu">
+    			<ul  class="nav nav-pills nav-stacked" role="tablist">
+                    <li role="presentation" class="active">
+       					<a href="#homework" aria-controls="homework" role="tab" data-toggle="tab">
+          					<span class="glyphicon glyphicon-calendar">Web前端高级技术大作业</span>
+       					</a>     						
+       				</li>
+       				<li role="presentation">
+       					<a href="../views/todo.html">
+          					<span class="glyphicon glyphicon-credit-card">To-Do</span>
+        				</a>	
+      				</li>
+       				<li role="presentation">
+                        <a href="#systemSetting" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-cog"></i>系统设置
+                            <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                        <ul id="systemSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                            <li>
+                                <a href="#"><i class="glyphicon glyphicon-user"></i>用户管理</a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="glyphicon glyphicon-edit"></i>修改密码</a>
+                            </li>
+                            <li>
+                                <a href="login.html"><i class="glyphicon glyphicon-log-out"></i>注销</a>
+                            </li> 
+                        </ul>
+                    </li>
+       				<li role="presentation">
+       					<a href="#addlist" aria-controls="addlist" role="tab" data-toggle="tab">
+          					<span class="glyphicon glyphicon-plus" v-on:click="addlist">新建清单</span>
+        				</a>
+        			</li>
+        		</ul>
+   
+ 			</div>
+ 			<div class="tab-content" id="body-right">
+				<div class="tab-pane fade in active"  role="tabpanel" id="homework">
+					<div id="app">
+                		<center><h2>Web前端高级技术大作业</h2></center>
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3>您有{{count}}件事要完成</h3>
+                                <input type="text" class="form-control" v-model="title" placeholder="Enter your task to do" @keyup.13="add">
+                            </div>
+                            <div class="panel-body">
+                               	<ul class="list-group">
+                                    <li class="list-group-item" v-for="(todo,index) in todos" @dblclick="remember(todo)">
+                                        <!-- 如果isSelected为true则del生效 -->
+                                        <!-- 点击li时可以知道点击的是哪一项，如果点击的todo和当前循环的某一个相等时显示输入框 -->
+                                        <span :class="{del:todo.isSelected}" v-show="cur!=todo">
+                                            <input type="checkbox" v-model="todo.isSelected">{{todo.title}}
+                                        </span>
+                                        <!-- 按回车@keyup和失去焦点@blur时cancel -->
+                                        <input type="text" v-model="todo.title" v-show="cur==todo" @keyup.enter="cancel" @blur="cancel" v-focus="cur==todo">
+                                        <!-- 删除按钮的属性 -->
+                                        <button class="pull-right btn btn-success btn-xs" @click="remove(todo)">&timesbar;</button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="panel-footer">
+                                <ul class="nav nav-pills">
+                                    <li role="presentation"><a href="../views/search.html">搜索任务</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+				<div class="tab-pane fade"  role="tabpanel" id="addlist">
+					<div id="alist">
+                        <p v-show="remainList.length>0">清单列表 ({{remainList.length}})</p>
+                        <ul class="list-group">
+                            <template v-for="list in remainList">
+                                <li class="list-group-item">
+                                    <span v-on:dblclick="editList(list)" title="编辑任务">{{list.text}}</span>
+                                    <button v-on:click="removeList(list)" title="移除任务">&#10007;</button>
+                                    <button v-on:click="completeList(list)" title="任务完成">&#10004;</button>
+                                </li>
+                            </template>
+                        </ul>
+                        <form>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="请输入你要添加的清单" v-model="newList" required>
+                            </div>
+                            <div class="form-group">  
+                                <center><a v-on:click="addList"><i class="glyphicon glyphicon-plus"></i>新建清单</a></center>
+                            </div>
+                        </form>
+                        <p>已完成的清单({{filterList.length}})</p>
+                        <ol class="list-group">
+                            <template v-for="list in filterList">
+                                <li class="list-group-item">  
+                                    {{list.text}}
+                                </li>
+                            </template>
+                        </ol>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../vue.js"></script>
+<script type="text/javascript" src="../js/web.js"></script>	
+<script>
+    var app = new Vue({   //创建Vue对象实例
+    el:"#alist", //挂载DOM元素的ID
+    data: {
+        lists : [{
+            text : "操作系统",
+            complete:false
+        },{
+            text : "数据库原理",
+            complete:false
+        },{
+            text : "Vue", 
+            complete:false
+        },{
+            text : "Bootstrap", 
+            complete:false 
+        }],
+        newList:"" ,
+    },
+    
+    methods:{
+        //新建清单
+        addList:function(event){
+            event.preventDefault();
+            this.lists.push({
+                text: this.newList,
+                complete: false
+            });
+            this.newList = "";
+        },
+        editList:function(list){
+            //移除当前点击list
+            this.removeList(list);
+            //更新vue实例中newList值
+            this.newList = list.text;
+        },
+        removeList: function(list){
+            //指向Vue实例中的lists
+            _lists = this.lists;
+            //remove
+            _lists.forEach(function(item, index){
+                if(item.text == list.text){
+                    _lists.splice(index, 1);
+                }
+            })
+        },
+        completeList: function(list){ //任务完成状态
+            list.complete = true; //设置任务完成的状态
+        }
+    },
+    //用于计算属性，属性的计算是基于它的依赖缓存(如vue实例中的lists) 
+    //只有当tasks数据变化时,才会重新取值
+    computed:{
+        
+        remainList:function(){ //筛选未完成的记录
+            return this.lists.filter(function(list){ //filter过滤器
+                return !list.complete;
+            })
+        },
+        filterList:function(){  //筛选已完成的记录
+            return this.lists.filter(function(list){
+                return list.complete;
+            })
+        }
+    }
+}); 
+    </script>
+</html>

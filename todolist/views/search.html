@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
+    <link rel="stylesheet" type="text/css" href="../css/search.css">
+</head>
+<body>
+    <form id="app" v-cloak>
+      <div class="navbar navbar-duomi navbar-static-top" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+              <a class="navbar-brand" href="../views/index.html" id="log">
+                <span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;返回首页
+              </a>
+          </div>
+        </div>
+      </div>
+      <div class="bar">
+        <input type="text" class="form-control" v-model="searchString" placeholder="Enter your search terms" />
+      </div>
+      <ul>
+        <!-- 渲染在filteredarticles数组的每个条目里的元素. -->
+        <li v-for="todo in filteredTodo">
+          <a v-bind:href="todo.url" rel="external nofollow"><img src="../img/1.jpg"></a>
+          <p>{{todo.title}}</p>
+        </li>
+      </ul>
+    </form>
+    <script src="../vue.js"></script>
+    <script src="../js/search.js"></script>
+</body>
+</html>
